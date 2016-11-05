@@ -26,7 +26,7 @@ impl Linker {
         }
     }
 
-    pub fn trigger_event(&self, event_key: &str) -> ActionResult {
+    pub fn trigger_event(&self, event_key: &str, req: EventRequest) -> ActionResult {
         let action_key = match self.events.get(event_key) {
             Some(action_key) => action_key,
             None => {
@@ -45,14 +45,11 @@ impl Linker {
             }
         };
 
-        self.handle_action(&action)
-    }
-
-    fn handle_action(&self, action: &Box<Action>) -> ActionResult {
-        Err(Error::NotImplemented)
+        action.act(req)
     }
 }
 
+// Implementing Key for the linker allows it to be accessed by the Iron extension.
 impl typemap::Key for Linker {
     type Value = Linker;
 }
