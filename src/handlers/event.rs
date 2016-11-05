@@ -16,7 +16,7 @@ pub fn handler(req: &mut Request) -> IronResult<Response> {
     let event = router.find("event").unwrap();
 
     match linker.trigger_event(event) {
-        Ok(res) => Ok(Response::with((status::Ok, res))),
+        Ok(res) => Ok(Response::with((status::Ok, res.body))),
         Err(Error::NotImplemented) => Ok(Response::with((status::NotFound, "not implemented"))),
         Err(Error::EventNotFound(event)) => {
             Ok(Response::with((status::NotFound, format!("event '{}' not found", event))))

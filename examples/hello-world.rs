@@ -2,6 +2,7 @@
 extern crate hob;
 use hob::prelude::*;
 
+
 fn main() {
     hob::server::listen(Config {
         host: String::from("127.0.0.1"),

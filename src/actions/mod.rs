@@ -2,20 +2,16 @@ pub mod subproc;
 
 use std::collections::BTreeMap;
 use iron::typemap;
-use events::Events;
+use events::{Events, EventRequest, EventResponse};
 use error::Error;
-use actions::subproc::SubprocAction;
 
-pub enum Action {
-    Subproc(SubprocAction),
+pub trait Action: Send + Sync {
+    fn act(&self, EventRequest) -> ActionResult;
 }
 
-pub type Actions = BTreeMap<String, Action>;
+pub type Actions = BTreeMap<String, Box<Action>>;
 
-
-// TODO(leeola): Convert String to a Golang-like ReaderCloser so Responses from
-// actions can be streamed.
-pub type ActionResult = Result<String, Error>;
+pub type ActionResult = Result<EventResponse, Error>;
 
 pub struct Linker {
     events: Events,
@@ -52,7 +48,7 @@ impl Linker {
         self.handle_action(&action)
     }
 
-    fn handle_action(&self, action: &Action) -> ActionResult {
+    fn handle_action(&self, action: &Box<Action>) -> ActionResult {
         Err(Error::NotImplemented)
     }
 }

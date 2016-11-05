@@ -3,6 +3,7 @@ use actions::subproc::SubprocAction;
 
 #[macro_export]
 macro_rules! events {
+    // match the trailing comma for a nice UX
     ( $($event:expr => $action:expr,)+ ) => {
         events!($($event => $action),+)
     };
@@ -45,6 +46,7 @@ macro_rules! events {
 
 #[macro_export]
 macro_rules! actions {
+    // match the trailing comma for a nice UX
     ( $($key:expr => $value:expr,)+ ) => {
         actions!($($key => $value),+)
     };
@@ -70,10 +72,10 @@ macro_rules! subproc {
                 _args.push(String::from($arg));
             )*
 
-            Action::Subproc(SubprocAction{
+            Box::new(SubprocAction{
                 bin: String::from($bin),
                 args: _args,
-            })
+            }) as Box<Action>
         }
     };
 }
